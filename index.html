@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Math Bomb | Seahawks Edition</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color-1: #4f46e5; /* Indigo */
+            --bg-color-2: #0ea5e9; /* Sky Blue */
+            --bg-color-3: #7c3aed; /* Violet */
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3));
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            color: #f8fafc;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .font-display {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .modern-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-modern {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px 0 rgba(79, 70, 229, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-modern:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(79, 70, 229, 0.6);
+        }
+
+        .btn-modern:active:not(:disabled) {
+            transform: translateY(2px) scale(0.98);
+        }
+
+        /* Pulsing effect for the Start button */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .btn-start {
+            background: linear-gradient(135deg, #10b981, #059669);
+            animation: pulse-glow 2s infinite;
+        }
+
+        /* Floating Animation for mascots/emojis */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .math-text {
+            font-size: clamp(3rem, 10vw, 7.5rem);
+            line-height: 1.1;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti-piece {
+            position: absolute;
+            top: -20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            animation: fall linear forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-in {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col items-center justify-center">
+
+    <div id="vfx-layer" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
+
+    <!-- Start / Main Menu Screen -->
+    <div id="start-screen" class="flex flex-col items-center justify-center modern-glass text-gray-900 p-6 md:p-10 rounded-[3rem] max-w-xl w-[92%] text-center z-10 relative max-h-[95vh] overflow-y-auto">
+        
+        <!-- School Spirit Badge -->
+        <div class="absolute -top-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-full font-black font-display text-sm md:text-base tracking-widest shadow-lg border-2 border-white transform -rotate-2">
+            🦅 6TH GRADE SEAHAWKS 🦅
+        </div>
+
+        <div class="flex items-center justify-center gap-4 mb-2 mt-4">
+            <div class="text-5xl floating">💣</div>
+            <div class="text-5xl floating" style="animation-delay: 1s;">⚡</div>
+        </div>
+        
+        <h1 class="text-5xl md:text-6xl font-black font-display text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 to-blue-700 mb-2 drop-shadow-sm">
+            THE MATH BOMB
+        </h1>
+        <p class="text-sm md:text-base text-indigo-600 mb-6 font-extrabold uppercase tracking-wide bg-indigo-50 px-4 py-1.5 rounded-full inline-block border border-indigo-100">
+            25 Fast-Paced Questions ⏱️
+        </p>
+        
+        <div class="w-full flex flex-col gap-5 mb-6 text-left">
+            <!-- Student First Name Dropdown -->
+            <div class="bg-gray-50/80 p-4 rounded-2xl border-2 border-indigo-100 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full bg-indigo-500"></div>
+                <label for="student-name" class="text-xs font-black text-indigo-800 uppercase tracking-wider block mb-2 pl-2">1. Select Your Identity:</label>
+                <select id="student-name" class="w-full bg-white border-2 border-indigo-200 rounded-xl p-3.5 text-gray-800 font-black text-lg focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/20 transition-all cursor-pointer shadow-sm">
+                    <option value="" disabled selected>-- Who is playing? --</option>
+                    <option value="Kylie">Kylie</option>
+                    <option value="Olivia">Olivia</option>
+                    <option value="Shiloh">Shiloh</option>
+                    <option value="Mishka">Mishka</option>
+                    <option value="Lindsey">Lindsey</option>
+                    <option value="Keylie">Keylie</option>
+                    <option value="Christina">Christina</option>
+                    <option value="Gracie">Gracie</option>
+                    <option value="Bridgette">Bridgette</option>
+                    <option value="Emma">Emma</option>
+                    <option value="Jordan">Jordan</option>
+                    <option value="Oliver">Oliver</option>
+                    <option value="Liam">Liam</option>
+                    <option value="Isaac">Isaac</option>
+                    <option value="Holden">Holden</option>
+                    <option value="Noah">Noah</option>
+                    <option value="Aiden">Aiden</option>
+                </select>
+            </div>
+
+            <!-- Operation Selection -->
+            <div class="bg-gray-50/80 p-4 rounded-2xl border-2 border-blue-100 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
+                <label class="text-xs font-black text-blue-800 uppercase tracking-wider block mb-3 pl-2">2. Choose Your Mission:</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center gap-3 text-gray-700 font-black cursor-pointer bg-white p-3.5 rounded-xl border-2 border-gray-100 hover:border-blue-400 hover:bg-blue-50 transition-all shadow-sm">
+                        <input type="radio" name="math-op" value="+" checked class="w-5 h-5 accent-blue-600"> ➕ Addition
+                    </label>
+                    <label class="flex items-center gap-3 text-gray-700 font-black cursor-pointer bg-white p-3.5 rounded-xl border-2 border-gray-100 hover:border-blue-400 hover:bg-blue-50 transition-all shadow-sm">
+                        <input type="radio" name="math-op" value="-" class="w-5 h-5 accent-blue-600"> ➖ Subtract
+                    </label>
+                    <label class="flex items-center gap-3 text-gray-700 font-black cursor-pointer bg-white p-3.5 rounded-xl border-2 border-gray-100 hover:border-blue-400 hover:bg-blue-50 transition-all shadow-sm">
+                        <input type="radio" name="math-op" value="*" class="w-5 h-5 accent-blue-600"> ✖️ Multiply
+                    </label>
+                    <label class="flex items-center gap-3 text-gray-700 font-black cursor-pointer bg-white p-3.5 rounded-xl border-2 border-gray-100 hover:border-blue-400 hover:bg-blue-50 transition-all shadow-sm">
+                        <input type="radio" name="math-op" value="/" class="w-5 h-5 accent-blue-600"> ➗ Division
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full flex flex-col gap-3 mt-2">
+            <button id="start-btn" class="btn-start text-white font-extrabold font-display text-2xl py-4 px-6 rounded-2xl btn-modern w-full uppercase tracking-widest border-b-4 border-emerald-700">
+                START GAME 🚀
+            </button>
+            <button id="class-leaderboard-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold font-display text-lg py-3 px-6 rounded-2xl btn-modern w-full uppercase tracking-wider border-b-4 border-indigo-800 mt-2">
+                🏆 View Class Top 10
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Screen (Keep same as before, minor styling tweaks applied below) -->
+    <div id="game-screen" class="hidden w-full h-full flex-col items-center p-4 md:p-6 max-w-4xl justify-between">
+        <div class="w-full flex justify-between items-center bg-white/20 backdrop-blur-md px-5 py-3.5 rounded-2xl border-2 border-white/40 shadow-lg">
+            <button id="quit-btn" class="bg-red-500 hover:bg-red-400 text-white font-black py-2 px-5 rounded-xl transition-all text-sm uppercase tracking-wider shadow-md">
+                Exit
+            </button>
+            <div class="text-center font-black text-sm md:text-base tracking-wide bg-black/20 px-4 py-1 rounded-full">
+                <span id="current-section-label" class="text-emerald-300 uppercase font-extrabold">Multiplication</span> <span class="text-white/50 px-1">|</span> Q: <span id="question-counter" class="text-white">1</span>/25
+            </div>
+            <div class="font-display font-black text-xl md:text-2xl text-yellow-300 drop-shadow-md">
+                Score: <span id="live-score">0</span>
+            </div>
+        </div>
+
+        <div class="w-full modern-glass rounded-[3rem] flex flex-col items-center justify-center p-8 md:p-14 my-auto text-gray-900 border-8 border-white/60">
+            <div id="math-problem" class="math-text font-black font-display text-center mb-8 text-indigo-950 drop-shadow-sm">
+                7 × 8
+            </div>
+            
+            <form id="answer-form" class="flex flex-col sm:flex-row gap-4 w-full max-w-lg justify-center items-center">
+                <input type="number" id="user-answer-input" placeholder="Answer here" autocomplete="off" autofocus class="w-full sm:w-64 text-4xl font-black text-center bg-indigo-50/50 border-4 border-indigo-300 rounded-2xl p-4 focus:outline-none focus:border-indigo-600 focus:bg-white text-indigo-900 shadow-inner transition-all placeholder:text-indigo-200">
+                <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-white font-black font-display text-2xl py-4 px-8 rounded-2xl btn-modern uppercase tracking-wider w-full sm:w-auto border-b-4 border-emerald-700">
+                    GO!
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center pb-2 text-sm md:text-base font-bold text-white drop-shadow-md">
+            Player: <span id="display-player-name" class="font-black text-yellow-300 uppercase tracking-widest">Student</span> 🦅 Press ENTER to submit fast!
+        </div>
+    </div>
+
+    <!-- Feedback Overlays -->
+    <div id="correct-overlay" class="hidden absolute inset-0 bg-emerald-900/80 z-40 flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+        <div class="bg-white text-gray-900 p-10 rounded-[3rem] max-w-md w-full modern-glass border-8 border-emerald-400 flex flex-col items-center pop-in shadow-2xl">
+            <div class="text-8xl mb-4 animate-bounce">🔥</div>
+            <h2 class="font-display font-black text-5xl text-emerald-600 mb-2 tracking-wide uppercase">Boom!</h2>
+            <p id="points-earned-text" class="text-3xl font-black text-indigo-900">+150 Points</p>
+        </div>
+    </div>
+
+    <div id="incorrect-overlay" class="hidden absolute inset-0 bg-red-900/80 z-50 flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+        <div class="bg-gradient-to-b from-red-50 to-white text-gray-900 p-8 rounded-[3rem] max-w-md w-full modern-glass border-8 border-red-400 flex flex-col items-center pop-in shadow-2xl">
+            <div class="text-7xl mb-4">😬</div>
+            <h2 class="font-display font-black text-4xl text-red-600 mb-2 uppercase">Missed it!</h2>
+            <div class="my-4 py-4 px-5 bg-red-50 rounded-2xl border-2 border-red-100 w-full shadow-inner">
+                <p class="text-2xl font-black text-gray-800 italic">"I still love you!"</p>
+                <p class="text-sm text-gray-500 mt-2 font-black uppercase tracking-widest">— Jesus</p>
+            </div>
+            <p class="text-base text-gray-600 mb-6 font-bold">Shake it off, you've got the next one!</p>
+            <button id="next-try-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black font-display text-2xl py-4 px-8 rounded-2xl btn-modern uppercase tracking-wider w-full border-b-4 border-indigo-800">
+                Next Problem
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="hidden absolute inset-0 bg-indigo-950/90 z-50 flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+        <div class="bg-white text-gray-900 p-10 rounded-[3rem] max-w-md w-full modern-glass border-8 border-indigo-400 flex flex-col items-center pop-in shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 text-9xl opacity-10">🦅</div>
+            <div class="text-7xl mb-3 z-10">🏆</div>
+            <h2 class="font-display font-black text-5xl text-indigo-900 mb-2 z-10">MISSION<br>ACCOMPLISHED</h2>
+            <p class="text-indigo-500 text-sm font-black mb-6 uppercase tracking-widest z-10">All 25 Questions Defeated!</p>
+            
+            <div class="bg-indigo-50 p-6 rounded-3xl border-4 border-indigo-100 w-full mb-8 shadow-inner z-10">
+                <p class="text-sm font-black text-indigo-400 uppercase tracking-widest mb-1">Final Score</p>
+                <p id="final-total-score" class="text-6xl font-black font-display text-indigo-600 my-1 drop-shadow-sm">2,450</p>
+                <p id="pb-congrats-text" class="text-sm font-black text-emerald-500 mt-2 hidden bg-emerald-100 py-1 rounded-full uppercase tracking-wide">🎉 New Personal Best!</p>
+            </div>
+
+            <button id="return-menu-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black font-display text-xl py-4 px-8 rounded-2xl btn-modern uppercase tracking-wider w-full border-b-4 border-indigo-800 z-10">
+                Back to HQ
+            </button>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboard-modal" class="hidden absolute inset-0 bg-black/80 z-50 flex-col items-center justify-center p-4 md:p-6 backdrop-blur-md">
+        <div class="bg-white text-gray-900 p-6 md:p-8 rounded-[3rem] max-w-2xl w-full modern-glass flex flex-col max-h-[90vh] shadow-2xl border-4 border-white/50">
+            <div class="flex justify-between items-center mb-6 border-b-2 border-gray-100 pb-4">
+                <h2 class="font-display font-black text-3xl md:text-4xl text-indigo-900 flex items-center gap-3">
+                    🦅 Seahawks Top 10
+                </h2>
+                <button id="close-leaderboard" class="bg-gray-100 hover:bg-red-100 hover:text-red-600 text-gray-400 font-black w-10 h-10 rounded-full flex items-center justify-center transition-colors text-xl">✕</button>
+            </div>
+
+            <div class="flex gap-2 mb-5 bg-gray-100 p-1.5 rounded-2xl">
+                <button class="lb-tab flex-1 py-2.5 rounded-xl font-black text-xs md:text-sm bg-indigo-600 text-white shadow-md transition-all uppercase tracking-wide" data-sec="mul">Multiply</button>
+                <button class="lb-tab flex-1 py-2.5 rounded-xl font-black text-xs md:text-sm text-gray-500 hover:bg-white hover:text-indigo-600 transition-all uppercase tracking-wide" data-sec="div">Divide</button>
+                <button class="lb-tab flex-1 py-2.5 rounded-xl font-black text-xs md:text-sm text-gray-500 hover:bg-white hover:text-indigo-600 transition-all uppercase tracking-wide" data-sec="add">Add</button>
+                <button class="lb-tab flex-1 py-2.5 rounded-xl font-black text-xs md:text-sm text-gray-500 hover:bg-white hover:text-indigo-600 transition-all uppercase tracking-wide" data-sec="sub">Subtract</button>
+            </div>
+
+            <div class="overflow-y-auto flex-grow pr-2 custom-scrollbar">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-gray-400 text-xs uppercase tracking-widest border-b-2 border-gray-100">
+                            <th class="py-3 px-4 font-black">Rank</th>
+                            <th class="py-3 px-4 font-black">Student Name</th>
+                            <th class="py-3 px-4 text-right font-black">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-tbody" class="text-base md:text-lg divide-y-2 divide-gray-50 text-gray-800">
+                        <!-- JS Injected -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // --- FIREBASE CONFIGURATION SETUP ---
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+        } catch(e) {
+            console.log("Firebase not configured yet. Running with local storage / offline fallback mode.");
+        }
+
+        // --- DOM Elements & State ---
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const startBtn = document.getElementById('start-btn');
+        const quitBtn = document.getElementById('quit-btn');
+        const studentNameSelect = document.getElementById('student-name');
+        const displayPlayerName = document.getElementById('display-player-name');
+        
+        const mathProblemDiv = document.getElementById('math-problem');
+        const userAnswerInput = document.getElementById('user-answer-input');
+        const answerForm = document.getElementById('answer-form');
+        const currentSectionLabel = document.getElementById('current-section-label');
+        const questionCounter = document.getElementById('question-counter');
+        const liveScore = document.getElementById('live-score');
+        
+        const correctOverlay = document.getElementById('correct-overlay');
+        const pointsEarnedText = document.getElementById('points-earned-text');
+        const incorrectOverlay = document.getElementById('incorrect-overlay');
+        const nextTryBtn = document.getElementById('next-try-btn');
+        
+        const gameOverModal = document.getElementById('game-over-modal');
+        const finalTotalScore = document.getElementById('final-total-score');
+        const pbCongratsText = document.getElementById('pb-congrats-text');
+        const returnMenuBtn = document.getElementById('return-menu-btn');
+
+        const classLeaderboardBtn = document.getElementById('class-leaderboard-btn');
+        const leaderboardModal = document.getElementById('leaderboard-modal');
+        const closeLeaderboard = document.getElementById('close-leaderboard');
+        const leaderboardTbody = document.getElementById('leaderboard-tbody');
+        const lbTabs = document.querySelectorAll('.lb-tab');
+
+        let playerName = "Student";
+        let currentOperation = "*";
+        let currentProblem = { q: "", a: 0 };
+        let problemIndex = 0;
+        let runningTotalScore = 0;
+        let startTime = 0;
+        let activeLbSection = 'mul';
+
+        // --- Audio Synthesizer ---
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playCorrectSound() {
+            if (!audioCtx) return;
+            try {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((f, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.frequency.value = f;
+                    let t = audioCtx.currentTime + (i * 0.08);
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.2, t + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+                    osc.start(t); osc.stop(t + 0.4);
+                });
+            } catch(e){}
+        }
+
+        function playGentleChord() {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch(e){}
+        }
+
+        function spawnConfetti() {
+            const vfxLayer = document.getElementById('vfx-layer');
+            for (let i = 0; i < 60; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti-piece');
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.animationDuration = (Math.random() * 1.5 + 1) + 's';
+                conf.style.backgroundColor = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'][Math.floor(Math.random()*5)];
+                vfxLayer.appendChild(conf);
+                setTimeout(() => conf.remove(), 2500);
+            }
+        }
+
+        function generateNewProblem() {
+            if (problemIndex >= 25) {
+                endGameSession();
+                return;
+            }
+            problemIndex++;
+            questionCounter.innerText = problemIndex;
+            liveScore.innerText = runningTotalScore;
+
+            let q = "", a = 0;
+            if (currentOperation === '+') {
+                let n1 = Math.floor(Math.random() * 20) + 1;
+                let n2 = Math.floor(Math.random() * 20) + 1;
+                q = `${n1} + ${n2}`; a = n1 + n2; currentSectionLabel.innerText = "Addition";
+            } else if (currentOperation === '-') {
+                let n1 = Math.floor(Math.random() * 20) + 1;
+                let n2 = Math.floor(Math.random() * 20) + 1;
+                if (n1 < n2) { let t = n1; n1 = n2; n2 = t; }
+                q = `${n1} − ${n2}`; a = n1 - n2; currentSectionLabel.innerText = "Subtraction";
+            } else if (currentOperation === '*') {
+                let n1 = Math.floor(Math.random() * 21);
+                let n2 = Math.floor(Math.random() * 21);
+                q = `${n1} × ${n2}`; a = n1 * n2; currentSectionLabel.innerText = "Multiplication";
+            } else if (currentOperation === '/') {
+                let n2 = Math.floor(Math.random() * 20) + 1;
+                let ans = Math.floor(Math.random() * 21);
+                let n1 = n2 * ans;
+                q = `${n1} ÷ ${n2}`; a = ans; currentSectionLabel.innerText = "Division";
+            }
+
+            currentProblem = { q, a };
+            mathProblemDiv.innerHTML = q;
+            userAnswerInput.value = '';
+            userAnswerInput.focus();
+            startTime = performance.now();
+        }
+
+        function endGameSession() {
+            gameScreen.classList.add('hidden');
+            gameScreen.classList.remove('flex');
+            finalTotalScore.innerText = runningTotalScore;
+
+            let sectionKey = currentOperation === '+' ? 'add' : currentOperation === '-' ? 'sub' : currentOperation === '*' ? 'mul' : 'div';
+            const pbKey = `pb_${sectionKey}`;
+            let currentPB = parseInt(localStorage.getItem(pbKey) || 0);
+            
+            if (runningTotalScore > currentPB) {
+                localStorage.setItem(pbKey, runningTotalScore);
+                pbCongratsText.classList.remove('hidden');
+            } else {
+                pbCongratsText.classList.add('hidden');
+            }
+
+            if (db) {
+                const ref = db.ref(`leaderboard/${sectionKey}/${playerName}`);
+                ref.once('value', (snapshot) => {
+                    const existingData = snapshot.val();
+                    const existingScore = existingData ? existingData.score : 0;
+                    if (runningTotalScore > existingScore || !snapshot.exists()) {
+                        ref.set({ name: playerName, score: runningTotalScore, timestamp: firebase.database.ServerValue.TIMESTAMP });
+                    }
+                });
+            }
+            gameOverModal.classList.remove('hidden');
+            gameOverModal.classList.add('flex');
+            spawnConfetti(); // Celebration on end!
+        }
+
+        startBtn.addEventListener('click', () => {
+            const nameVal = studentNameSelect.value;
+            if (!nameVal) { alert("Hold up! Select your name before starting!"); studentNameSelect.focus(); return; }
+            initAudio();
+            playerName = nameVal;
+            displayPlayerName.innerText = playerName;
+            const selectedOpRadio = document.querySelector('input[name="math-op"]:checked');
+            currentOperation = selectedOpRadio ? selectedOpRadio.value : '*';
+            problemIndex = 0; runningTotalScore = 0;
+            startScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden'); gameScreen.classList.add('flex');
+            generateNewProblem();
+        });
+
+        quitBtn.addEventListener('click', () => {
+            gameScreen.classList.add('hidden'); gameScreen.classList.remove('flex'); startScreen.classList.remove('hidden');
+        });
+
+        returnMenuBtn.addEventListener('click', () => {
+            gameOverModal.classList.add('hidden'); gameOverModal.classList.remove('flex'); startScreen.classList.remove('hidden');
+        });
+
+        answerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userAns = parseInt(userAnswerInput.value);
+            if (isNaN(userAns)) return;
+            const elapsedSeconds = (performance.now() - startTime) / 1000;
+
+            if (userAns === currentProblem.a) {
+                let earnedPoints = Math.max(50, Math.floor(1000 - (elapsedSeconds * 70)));
+                runningTotalScore += earnedPoints;
+                liveScore.innerText = runningTotalScore;
+                playCorrectSound(); spawnConfetti();
+                pointsEarnedText.innerText = `+${earnedPoints} Pts`;
+                correctOverlay.classList.remove('hidden'); correctOverlay.classList.add('flex');
+                setTimeout(() => { correctOverlay.classList.add('hidden'); correctOverlay.classList.remove('flex'); generateNewProblem(); }, 1000);
+            } else {
+                playGentleChord();
+                incorrectOverlay.classList.remove('hidden'); incorrectOverlay.classList.add('flex');
+            }
+        });
+
+        nextTryBtn.addEventListener('click', () => {
+            incorrectOverlay.classList.add('hidden'); incorrectOverlay.classList.remove('flex'); generateNewProblem();
+        });
+
+        classLeaderboardBtn.addEventListener('click', () => {
+            leaderboardModal.classList.remove('hidden'); leaderboardModal.classList.add('flex'); fetchLeaderboardData(activeLbSection);
+        });
+        closeLeaderboard.addEventListener('click', () => {
+            leaderboardModal.classList.add('hidden'); leaderboardModal.classList.remove('flex');
+        });
+
+        lbTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                lbTabs.forEach(t => {
+                    t.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                    t.classList.add('text-gray-500', 'hover:bg-white', 'hover:text-indigo-600');
+                });
+                e.target.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+                e.target.classList.remove('text-gray-500', 'hover:bg-white', 'hover:text-indigo-600');
+                activeLbSection = e.target.getAttribute('data-sec');
+                fetchLeaderboardData(activeLbSection);
+            });
+        });
+
+        function fetchLeaderboardData(sec) {
+            leaderboardTbody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-gray-400 font-black animate-pulse">Fetching scores...</td></tr>`;
+            if (db) {
+                db.ref(`leaderboard/${sec}`).orderByChild('score').limitToLast(10).once('value', (snapshot) => {
+                    let scores = [];
+                    snapshot.forEach((childSnap) => { scores.push(childSnap.val()); });
+                    scores.sort((a, b) => b.score - a.score);
+                    renderLeaderboardUI(scores);
+                }, () => {
+                    leaderboardTbody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-red-500 font-black">Unable to connect to database.</td></tr>`;
+                });
+            } else {
+                let mockScores = [{ name: playerName || "You", score: parseInt(localStorage.getItem(`pb_${sec}`) || 0) }].filter(s => s.score > 0);
+                renderLeaderboardUI(mockScores);
+            }
+        }
+
+        function renderLeaderboardUI(scores) {
+            leaderboardTbody.innerHTML = '';
+            if (scores.length === 0) {
+                leaderboardTbody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-gray-400 font-black">No scores yet. Set the bar!</td></tr>`;
+                return;
+            }
+            scores.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-indigo-50 transition-colors group";
+                let rankColor = index === 0 ? 'text-yellow-500 text-2xl' : index === 1 ? 'text-gray-400 text-xl' : index === 2 ? 'text-amber-700 text-lg' : 'text-indigo-300';
+                let rankText = index === 0 ? '🥇 1st' : index === 1 ? '🥈 2nd' : index === 2 ? '🥉 3rd' : `#${index + 1}`;
+                
+                tr.innerHTML = `
+                    <td class="py-4 px-4 font-black ${rankColor}">${rankText}</td>
+                    <td class="py-4 px-4 font-black text-indigo-900 group-hover:text-indigo-600 transition-colors">${escapeHtml(item.name)}</td>
+                    <td class="py-4 px-4 text-right text-emerald-600 font-black">${item.score.toLocaleString()}</td>
+                `;
+                leaderboardTbody.appendChild(tr);
+            });
+        }
+        function escapeHtml(text) { return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    </script>
+</body>
+</html>
