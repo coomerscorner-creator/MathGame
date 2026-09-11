@@ -191,7 +191,7 @@
         </div>
     </div>
 
-    <!-- Game Screen (Keep same as before, minor styling tweaks applied below) -->
+    <!-- Game Screen -->
     <div id="game-screen" class="hidden w-full h-full flex-col items-center p-4 md:p-6 max-w-4xl justify-between">
         <div class="w-full flex justify-between items-center bg-white/20 backdrop-blur-md px-5 py-3.5 rounded-2xl border-2 border-white/40 shadow-lg">
             <button id="quit-btn" class="bg-red-500 hover:bg-red-400 text-white font-black py-2 px-5 rounded-xl transition-all text-sm uppercase tracking-wider shadow-md">
@@ -234,14 +234,15 @@
 
     <div id="incorrect-overlay" class="hidden absolute inset-0 bg-red-900/80 z-50 flex-col items-center justify-center p-6 text-center backdrop-blur-md">
         <div class="bg-gradient-to-b from-red-50 to-white text-gray-900 p-8 rounded-[3rem] max-w-md w-full modern-glass border-8 border-red-400 flex flex-col items-center pop-in shadow-2xl">
-            <div class="text-7xl mb-4">😬</div>
-            <h2 class="font-display font-black text-4xl text-red-600 mb-2 uppercase">Missed it!</h2>
-            <div class="my-4 py-4 px-5 bg-red-50 rounded-2xl border-2 border-red-100 w-full shadow-inner">
-                <p class="text-2xl font-black text-gray-800 italic">"I still love you!"</p>
-                <p class="text-sm text-gray-500 mt-2 font-black uppercase tracking-widest">— Jesus</p>
+            <div class="text-6xl mb-2">😬</div>
+            <h2 class="font-display font-black text-3xl text-red-600 mb-1 uppercase">Missed it!</h2>
+            <p class="text-base font-bold text-gray-700 mb-2">The correct answer was: <span id="target-correct-answer" class="text-indigo-600 font-black text-xl"></span></p>
+            <div class="my-2 py-3 px-4 bg-red-50 rounded-2xl border-2 border-red-100 w-full shadow-inner">
+                <p class="text-xl font-black text-gray-800 italic">"I still love you!"</p>
+                <p class="text-xs text-gray-500 mt-1 font-black uppercase tracking-widest">— Jesus</p>
             </div>
-            <p class="text-base text-gray-600 mb-6 font-bold">Shake it off, you've got the next one!</p>
-            <button id="next-try-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black font-display text-2xl py-4 px-8 rounded-2xl btn-modern uppercase tracking-wider w-full border-b-4 border-indigo-800">
+            <p class="text-sm text-gray-600 mb-4 font-bold">Shake it off, you've got the next one!</p>
+            <button id="next-try-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black font-display text-xl py-3 px-6 rounded-2xl btn-modern uppercase tracking-wider w-full border-b-4 border-indigo-800">
                 Next Problem
             </button>
         </div>
@@ -307,22 +308,22 @@
 
     <script>
         // --- FIREBASE CONFIGURATION SETUP ---
-const firebaseConfig = {
-    apiKey: "AIzaSyA5nKy3WENilOLuM2xUUh5qrKxxLhFM_2M",
-    authDomain: "class-1d8a0.firebaseapp.com",
-    databaseURL: "https://class-1d8a0-default-rtdb.firebaseio.com",
-    projectId: "class-1d8a0",
-    storageBucket: "class-1d8a0.firebasestorage.app",
-    messagingSenderId: "598060765871",
-    appId: "1:598060765871:web:1b2bc8b5f859da7b1a7a5a"
-  };
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5nKy3WENilOLuM2xUUh5qrKxxLhFM_2M",
+            authDomain: "class-1d8a0.firebaseapp.com",
+            databaseURL: "https://class-1d8a0-default-rtdb.firebaseio.com",
+            projectId: "class-1d8a0",
+            storageBucket: "class-1d8a0.firebasestorage.app",
+            messagingSenderId: "598060765871",
+            appId: "1:598060765871:web:1b2bc8b5f859da7b1a7a5a"
+        };
 
         let db = null;
         try {
             firebase.initializeApp(firebaseConfig);
             db = firebase.database();
         } catch(e) {
-            console.log("Firebase not configured yet. Running with local storage / offline fallback mode.");
+            console.log("Firebase initialization error:", e);
         }
 
         // --- DOM Elements & State ---
@@ -343,6 +344,7 @@ const firebaseConfig = {
         const correctOverlay = document.getElementById('correct-overlay');
         const pointsEarnedText = document.getElementById('points-earned-text');
         const incorrectOverlay = document.getElementById('incorrect-overlay');
+        const targetCorrectAnswer = document.getElementById('target-correct-answer');
         const nextTryBtn = document.getElementById('next-try-btn');
         
         const gameOverModal = document.getElementById('game-over-modal');
@@ -484,7 +486,7 @@ const firebaseConfig = {
             }
             gameOverModal.classList.remove('hidden');
             gameOverModal.classList.add('flex');
-            spawnConfetti(); // Celebration on end!
+            spawnConfetti();
         }
 
         startBtn.addEventListener('click', () => {
@@ -525,6 +527,7 @@ const firebaseConfig = {
                 setTimeout(() => { correctOverlay.classList.add('hidden'); correctOverlay.classList.remove('flex'); generateNewProblem(); }, 1000);
             } else {
                 playGentleChord();
+                targetCorrectAnswer.innerText = currentProblem.a;
                 incorrectOverlay.classList.remove('hidden'); incorrectOverlay.classList.add('flex');
             }
         });
